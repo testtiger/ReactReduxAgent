@@ -4,15 +4,13 @@ import {
   Container,
   Grid,
   Button,
-  Checkbox,
   Form,
   Header,
-  Image
+  Image,
+  GridRow
 } from "semantic-ui-react";
 
-import { makeRestcall } from "../../../Rest/agent-rest-client";
-import { LOGIN_URI } from "../../../Rest/RestConstants";
-import { loginActionCreator } from "../../../ReduxActions/LoginActionCreator";
+import { fetchAuthToken } from "../../../ReduxActions/LoginActionCreator";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -43,16 +41,7 @@ export default class LoginPage extends Component {
   componentDidMount = () => {};
 
   onChange(e) {
-    console.log(e.target.name);
     this.setState({ [e.target.name]: e.target.value });
-  }
-  onChangeusr(e) {
-    console.log(e.target.name);
-    this.setState({ username: e.target.value });
-  }
-  onChangepwd(e) {
-    console.log(e.target.name);
-    this.setState({ password: e.target.value });
   }
   validate() {
     if (!this.state.username) {
@@ -61,31 +50,32 @@ export default class LoginPage extends Component {
     if (!this.state.password) {
       alert("Enter password");
     }
-    if (this.state.password && this.state.username) {
+    if (!this.state.password && !this.state.username) {
       alert("Username & password cannot be empty");
     }
   }
 
   login(e) {
     e.preventDefault();
+    this.validate();
     if (this.state.password && this.state.username) {
       var payload = this.state;
       payload["grant_type"] = "password";
-      this.props.dispatch(loginActionCreator(payload));
+      this.props.dispatch(fetchAuthToken(payload));
     }
   }
 
   render() {
-    console.log(
-      "this.props.store.Login.isLoggedin---------",
-      this.props.store.LOGIN.isLoggedIn
-    );
+    console.log("this.props.store.---------", this.props);
     if (this.props.store.LOGIN.isLoggedIn) {
       return <Redirect to={"/welcome/"} />;
     } else {
       return (
         <Container>
           <Grid>
+            <GridRow >
+
+            </GridRow>
             <Grid.Column width={4}>
               <Card>
                 <Image src="https://react.semantic-ui.com/images/avatar/large/matthew.png" />
@@ -130,7 +120,9 @@ export default class LoginPage extends Component {
 }
 
 const mapStateToProps = function(state) {
-  return { store: state };
+  var x = { store: state };
+  console.log("----------------my store is", x);
+  return x;
 };
 
 LoginPage = connect(mapStateToProps)(LoginPage);

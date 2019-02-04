@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 
 function TableHeader() {
   return (
-      <thead className="thead-light">
+    <thead className="thead-light">
       <tr>
         <th scope="col">Order Id</th>
         <th scope="col">Customer Name</th>
@@ -14,12 +15,15 @@ function TableHeader() {
 
 function TableBody(props) {
   props = props.recentOrdersList;
+
   var orderMapCallBack = function(order) {
     return (
       <tr key={order.orderId}>
-        <th scope="col">{order.orderId}</th>
-        <th scope="col">{order.customerName}</th>
-        <th scope="col">{order.amount}</th>
+        <td>
+          <a href={"/orders/" + order.orderId}>{order.orderId}</a>
+        </td>
+        <td>{order.customerName}</td>
+        <td>{order.amount}</td>
       </tr>
     );
   };
@@ -31,17 +35,25 @@ function TableBody(props) {
 }
 
 class RecentOrders extends Component {
-  
-  
-
+  onClickHandler(orderId) {
+    alert(orderId);
+    return <Redirect to={"/orders/" + orderId} />;
+  }
   render() {
-    return <div className="table-responsive">
+    return (
+      <div className="table-responsive">
         <h3>Recent orders</h3>
         <table className="table table-bordered table-responsive">
           <TableHeader />
-          <TableBody recentOrdersList={this.props.recentOrders ? this.props.recentOrders : []} />
+          <TableBody
+            recentOrdersList={
+              this.props.recentOrders ? this.props.recentOrders : []
+            }
+            onClick={this.onClickHandler.bind(this)}
+          />
         </table>
-      </div>;
+      </div>
+    );
   }
 }
 

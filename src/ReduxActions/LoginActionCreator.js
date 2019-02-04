@@ -3,7 +3,6 @@ import { makeRestcall } from "../Rest/agent-rest-client";
 import { LOGIN_URI } from "../Rest/RestConstants";
 
 export function setAuthToken(token, isLoggedIn) {
-  console.log(" I am in setAuthToken creatore");
   return {
     type: SET_AUTH_TOKEN,
     payload: {
@@ -12,8 +11,7 @@ export function setAuthToken(token, isLoggedIn) {
     }
   };
 }
-export function loginActionCreator(payload) {
-  console.log(" I am in loginAction creatore");
+export function fetchAuthToken(payload) {
   return dispatch => {
     makeRestcall("POST", LOGIN_URI, payload).then(response => {
       console.log(response);

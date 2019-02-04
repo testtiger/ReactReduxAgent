@@ -11,7 +11,8 @@
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.84.0"
+    "semantic-ui-react": "^0.84.0",
+    "recharts": "1.4.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,5 +29,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "http://10.152.105.10:9080"
+  "proxy": "http://10.152.110.165:9080"
 }

@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
-import App, { render } from "./components/Agent/App";
 import * as serviceWorker from "./serviceWorker";
 import rootReducer from "./Reducers/DashBoardReducers";
 import { createStore, applyMiddleware } from "redux";
