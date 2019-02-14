@@ -1,4 +1,0 @@
-export const AGENT_LOGIN ="AGENT_LOGIN";
-export const GET_AUTH_TOKEN = "GET_AUTH_TOKEN";
-export const FETCH_RECENT_ORDERS = "FETCH_RECENT_ORDERS";
-export const FETCH_QUICK_LINKS= "AGENT_LOGIN";
