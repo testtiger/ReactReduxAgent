@@ -20,11 +20,10 @@ export default class LineItem extends Component {
     let quantity = +e.target.value;
     quantity = this.validateQuantity(quantity);
     this.setState({ quantity: quantity });
-    // alert(quantity);
+  
     this.props.item.updateQuantity(quantity);
   }
   onClickRemove(skuId) {
-    // alert(skuId);
     console.log("Clicked on remove", skuId);
     this.props.item.remove(skuId);
     // this.props.conf.removeItem(skuId);

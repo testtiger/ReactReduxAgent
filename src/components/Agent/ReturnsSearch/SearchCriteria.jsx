@@ -5,11 +5,10 @@ class SearchCriteria extends Component {
     super(props);
     this.state = {
       criteria: {
-        firstName: "",
-        lastName: "",
+        returnRequestId: "",
+        orderId: "",
         email: "",
-        postalCode: "",
-        phoneNumber: "",
+        state: "",
         pageNumber: 0,
         limit: 15,
         requireCount: false
@@ -31,10 +30,9 @@ class SearchCriteria extends Component {
       alert("Enter search criteria");
     } else {
       console.log("will do get call with", this.state.criteria);
-      if (this.props.getCustomers) {
-        this.props.getCustomers(this.state.criteria);
+      if (this.props.getReturnRequests) {
+        this.props.getReturnRequests(this.state.criteria);
       }
-
       //make get call here
     }
   }
@@ -45,11 +43,10 @@ class SearchCriteria extends Component {
     if (!this.isSearchCriteriaIsEmpty()) {
       console.log("crieteria is not empty");
       let resetCriteria = {
-        firstName: "",
-        lastName: "",
+        returnRequestId: "",
+        orderId: "",
         email: "",
-        postalCode: "",
-        phoneNumber: "",
+        state: "Select Status...",
         pageNumber: 0,
         limit: 15,
         requireCount: false
@@ -69,7 +66,7 @@ class SearchCriteria extends Component {
     let result = "";
     for (let key in criteria) {
       result = result + criteria[key];
-      console.log("---->", result);
+      console.log("---->Returns Search Criteria is", result);
     }
     return result ? false : true;
   }
@@ -82,21 +79,21 @@ class SearchCriteria extends Component {
             <div className="form-group col-md-4">
               <input
                 onChange={this.onChange.bind(this)}
-                value={this.state.criteria.firstName}
-                name="firstName"
+                value={this.state.criteria.returnRequestId}
+                name="returnRequestId"
                 type="text"
                 className="form-control"
-                placeholder="First name"
+                placeholder="Return Request Number"
               />
             </div>
             <div className="form-group col-md-4">
               <input
                 onChange={this.onChange.bind(this)}
-                value={this.state.criteria.lastName}
-                name="lastName"
+                value={this.state.criteria.orderId}
+                name="orderId"
                 type="text"
                 className="form-control"
-                placeholder="Last name"
+                placeholder="Order Number"
               />
             </div>
           </div>
@@ -112,26 +109,18 @@ class SearchCriteria extends Component {
               />
             </div>
             <div className="form-group col-md-4">
-              <input
-                onChange={this.onChange.bind(this)}
-                value={this.state.criteria.postalCode}
-                name="postalCode"
-                type="text"
-                className="form-control"
-                placeholder="Zip code"
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="form-group col-md-4">
-              <input
-                onChange={this.onChange.bind(this)}
-                value={this.state.criteria.phoneNumber}
-                name="phoneNumber"
-                type="text"
-                className="form-control"
-                placeholder="Phone Number"
-              />
+            <select 
+            name="state" value={this.state.criteria.state}
+            onChange={this.onChange.bind(this)}
+            className="form-control">
+            <option value="Select Status..">Select Status...</option>
+              <option value="PENDING_CUSTOMER_ACTION">Approved</option>
+              <option value="FULL_RETURN">Full Return</option>
+              <option value="COMPLETE">Complete</option>
+              <option value="PARTIAL_RETURN">Partial Return</option>
+              <option value="MANUAL_REFUND">Manual Refund</option>
+              <option value="PENDING_REFUND">Pending Refund</option>
+            </select>
             </div>
           </div>
           <div className="row">

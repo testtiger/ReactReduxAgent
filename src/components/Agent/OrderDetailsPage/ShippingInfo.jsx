@@ -1,24 +1,12 @@
 import React, { Component } from "react";
 import { Card, Divider, Header, Image, Segment } from "semantic-ui-react";
 export default function ShippinInfo(props) {
-  let shipping = {
-    lastName: "k",
-    country: "US",
-    address2: "line2",
-    city: "alabama",
-    address1: "line1",
-    postalCode: "36006",
+  let label = props.label;
 
-    firstName: "Diwakara",
-    phoneNumber: "789456123",
-    stateName: "Alabama",
-    state: "AL",
-    countryName: "United States",
-    email: "some1@gmail.com"
-  };
+  let shipping = props.address;
   return (
     <Segment basic textAlign="left">
-      <Header as="h3">ShippinInfo</Header>
+      <Header as="h3">{label}</Header>
 
       <span> {`${shipping.firstName} ${shipping.lastName}`}</span>
       <br />

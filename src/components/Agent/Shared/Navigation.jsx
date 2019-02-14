@@ -1,5 +1,11 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import { Container, Grid, GridRow } from "semantic-ui-react";
+
+var navLinksTyle = {
+  textDecoration: "none",
+  color: "black"
+};
 class Navigation extends Component {
   isLoggedIn() {
     return sessionStorage.getItem("isLoggedin") === "true";
@@ -12,22 +18,42 @@ class Navigation extends Component {
     }
 
     return (
-      <div className="container ">
-        <div className="row well">
-          <div className="col-md-2">
-            <NavLink activeStyle={{
-              textDecoration: 'none',
-              color: 'black'
-            }} to="/welcome">DashBoard</NavLink>
-          </div>
-          <div className="col-md-2">
-            <NavLink activeStyle={{
-              textDecoration: 'none',
-              color: 'black'
-            }} to="/customers">Customers</NavLink>
-          </div>
-        </div>
-      </div>
+      <Container>
+        <Grid>
+          <GridRow />
+
+          <GridRow columns={7}>
+            <Grid.Column>
+              <NavLink activeStyle={navLinksTyle} to="/welcome">
+                DashBoard
+              </NavLink>
+            </Grid.Column>
+
+            <Grid.Column>
+              <NavLink activeStyle={navLinksTyle} to="/customers">
+                Customers
+              </NavLink>
+            </Grid.Column>
+            <Grid.Column>
+              <NavLink activeStyle={navLinksTyle} to="/ManageAgents">
+                Manage Agents
+              </NavLink>
+            </Grid.Column>
+            <Grid.Column>
+              <NavLink to="/orders">Order Search</NavLink>
+            </Grid.Column>
+            <Grid.Column>
+              <NavLink to="/returns">Returns Search</NavLink>
+            </Grid.Column>
+            <Grid.Column>
+              <NavLink to="/cancelledOrders">Cancelled Orders</NavLink>
+            </Grid.Column>
+            <Grid.Column>
+              <NavLink to="/returnedOrders">Returned Orders</NavLink>
+            </Grid.Column>
+          </GridRow>
+        </Grid>
+      </Container>
     );
   }
 }

@@ -15,12 +15,13 @@ export default class ProfileInfo extends Component {
     return (
       <div className="container">
         <div className="row">
-          <h3>Profile Info</h3>
-          <hr />
+          <h3>Profile Info</h3>          
         </div>
+        <br/>
+          <br/>
         <div className="row">
           <div className="col-md-3">
-            <label htmlFor="firstName">FirstName</label>
+            <label htmlFor="firstName">FirstName:&nbsp;&nbsp;&nbsp;</label>
             <input
               name="firstName"
               id="firstName"
@@ -29,8 +30,11 @@ export default class ProfileInfo extends Component {
               value={this.props.firstName}
             />
           </div>
+          </div>
+          <br/>          
+          <div className="row">
           <div className="col-md-3">
-            <label htmlFor="lastName">LastName</label>
+            <label htmlFor="lastName">LastName: &nbsp;&nbsp;&nbsp;</label>
             <input
               name="lastName"
               id="lastName"
@@ -40,10 +44,9 @@ export default class ProfileInfo extends Component {
             />
           </div>
         </div>
-
-        <br />
+        <br/>
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-8">
             <label htmlFor="email">EmailAddress :</label>
             <input
               name="email"
@@ -53,8 +56,11 @@ export default class ProfileInfo extends Component {
               value={this.props.email}
             />
           </div>
+          </div>
+          <br/>
+          <div className="row" align="left">
           <div className="col-md-3">
-            <label htmlFor="receiveEmail">
+            <label htmlFor="receiveEmail" >&nbsp;&nbsp;&nbsp;
               <input
                 name="receiveEmail"
                 type="checkbox"
@@ -65,15 +71,11 @@ export default class ProfileInfo extends Component {
               Receive Email
             </label>
           </div>
+          
         </div>
-        <div className="row">
-          <div className="col-md-4" />
-          <div className="col-md-4" />
-          <div className="col-md-4">
-            <button>Save</button>
-          </div>
-        </div>
-      </div>
+        <br/>
+        <br/>
+              </div>
     );
   }
 }

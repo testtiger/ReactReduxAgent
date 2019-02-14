@@ -13,10 +13,13 @@ var store = createStore(rootReducer, applyMiddleware(thunk));
 //C:\Users\dkammara.ORADEV\Desktop\React\react-2hours\Agent-redux\src\components\Router
 
 //render();
+
+
 ReactDOM.render(
-  <Provider store={store}>
-    <Routes mystore={store} />
-  </Provider>,
+  <div>
+    <Routes />
+  </div>,
+
   document.getElementById("root")
 );
 

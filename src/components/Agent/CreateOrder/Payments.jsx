@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-
 export default class Payments extends Component {
   constructor(props) {
-    /* this.state = {
+    super(props);
+     this.state = {
      cardDetails: {nameOnCard: "",
       cardType: "",
       cardNumber: "",
@@ -12,11 +12,9 @@ export default class Payments extends Component {
       expiryMonth: "",
       expiryYear: "",
       paymentMethodType:""}
-    }; */
+    }; 
   }
-
   onChange(e) {
-    alert(e.target.value);
     let localCardDetails = {
       ...this.state.cardDetails
     };

@@ -1,15 +1,10 @@
-
-
 import { LOGIN_URI } from "./RestConstants";
-
-
 
 export function makeRestcall(type, uri, payload) {
   console.log("type is -----" + type);
   console.log("uri is -----" + uri);
   console.log("payload is -----" + payload);
 
-  uri = LOGIN_URI;
   var formData = frameFormBody(payload);
 
   var reqObj = {

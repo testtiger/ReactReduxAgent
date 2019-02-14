@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 
-class SearchResults extends Component {
+export class SearchResults extends Component {
   saveProfileAccessed(profileObject, isProfilePageRequested) {
-    console.log("------------->search result click", this.props);
-    console.log("------------->search result profile", profileObject);
     if (profileObject === undefined) {
       throw TypeError("Check Profile Object value");
     }
@@ -39,6 +37,8 @@ class SearchResults extends Component {
             <TableBody
               onSearchResultClick={this.saveProfileAccessed.bind(this)}
               profilesList={this.props.resp.profileList}
+              isAuthenticated={this.props.isAuthenticated}
+              onChangeAuthKey={this.props.onChangeAuthKey}
             />
           </table>
         </div>
@@ -60,6 +60,7 @@ function TableHeader() {
         <th>Latest Order</th>
         <th>Orders</th>
         <th>Profile Details</th>
+        <th>Authorization</th>
         <th>Cart</th>
       </tr>
     </thead>
@@ -67,8 +68,21 @@ function TableHeader() {
 }
 
 function TableBody(props) {
+  let authKeytextInput = React.createRef();
   let profilesList = props.profilesList;
+  let isAuthenticated = props.isAuthenticated;
+  let elementToShow = null;
+  let cassClassNameForInfoButton = isAuthenticated === false ? "disabled" : "";
+  let cassClassNameForAuthKey = isAuthenticated === false ? "" : "disabled";
+
   var element = profilesList.map(profile => {
+    let orderIDLinkElement = null;
+    if (profile.latestOrderId) {
+      orderIDLinkElement = (
+        <a href={"/orders/" + profile.latestOrderId}>{profile.latestOrderId}</a>
+      );
+    }
+
     return (
       <tr key={profile.profileDetail.id}>
         <td>{profile.profileDetail.firstName}</td>
@@ -89,16 +103,49 @@ function TableBody(props) {
             ? profile.profileDetail.parentOrganization
             : ""}
         </td>
-        <td>{profile.latestOrderId ? profile.latestOrderId : ""}</td>
+        <td>{orderIDLinkElement}</td>
         <td>{profile.numberOfOrders ? profile.numberOfOrders : 0}</td>
         <td>
-          <button
-            onClick={() => {
-              props.onSearchResultClick(profile, true);
-            }}
-          >
-            Info...
-          </button>
+          {(function() {
+            if (isAuthenticated) {
+              return (
+                <button
+                  onClick={() => {
+                    props.onSearchResultClick(profile, true);
+                  }}
+                >
+                  View Profile
+                </button>
+              );
+            } else {
+              return <span>Authenticate To View Profile</span>;
+            }
+          })()}
+        </td>
+        <td>
+          {(function() {
+            if (isAuthenticated) {
+              return (
+                <strong style={{ color: "Green" }}>
+                  Authentication success
+                </strong>
+              );
+            } else {
+              return (
+                <div>
+                  <strong>Key: Any Product Name from latest order </strong>
+                  <input
+                    type="text"
+                    placeholder="ProductName"
+                    name="Auth"
+                    onChange={e => {
+                      props.onChangeAuthKey(profile.latestOrderId, e);
+                    }}
+                  />
+                </div>
+              );
+            }
+          })()}
         </td>
         <td>
           <button

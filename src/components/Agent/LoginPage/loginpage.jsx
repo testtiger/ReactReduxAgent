@@ -1,47 +1,54 @@
 import React, { Component } from "react";
+
+import { LOGIN_URI } from "../../../Rest/RestConstants";
+import { makeRestcall } from "../../../Rest/agent-rest-client";
+import { Redirect } from "react-router-dom";
+import loginPageImage from "./login.jpg";
 import {
   Card,
   Container,
   Grid,
   Button,
+  GridRow,
+  Checkbox,
   Form,
   Header,
-  Image,
-  GridRow
+  Image
 } from "semantic-ui-react";
-
-import { fetchAuthToken } from "../../../ReduxActions/LoginActionCreator";
-import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
+
     this.state = { username: "", password: "", isLoggedin: false };
     sessionStorage.setItem("isLoggedin", false);
     sessionStorage.setItem("token", null);
-    /***this.state = { username: "", password: "", isLoggedin: false };
 
-    sessionStorage.setItem("isLoggedin", false);
-    sessionStorage.setItem("token", null);*/
-
-    /*** sessionStorage.setItem("token", window.localStorage.getItem("token"));
+    /*  sessionStorage.setItem("token", window.localStorage.getItem("token"));
     sessionStorage.setItem(
       "isLoggedin",
       window.localStorage.getItem("isLoggedin")
     );
-
     this.state = {
       username: "",
       password: "",
       isLoggedin: sessionStorage.getItem("isLoggedin") === "true" ? true : false
-    };*/
+    };
+    */
   }
 
   componentDidMount = () => {};
 
   onChange(e) {
+    console.log(e.target.name);
     this.setState({ [e.target.name]: e.target.value });
+  }
+  onChangeusr(e) {
+    console.log(e.target.name);
+    this.setState({ username: e.target.value });
+  }
+  onChangepwd(e) {
+    console.log(e.target.name);
+    this.setState({ password: e.target.value });
   }
   validate() {
     if (!this.state.username) {
@@ -50,40 +57,52 @@ export default class LoginPage extends Component {
     if (!this.state.password) {
       alert("Enter password");
     }
-    if (!this.state.password && !this.state.username) {
-      alert("Username & password cannot be empty");
-    }
   }
-
   login(e) {
     e.preventDefault();
-    this.validate();
+    var self = this;
     if (this.state.password && this.state.username) {
       var payload = this.state;
       payload["grant_type"] = "password";
-      this.props.dispatch(fetchAuthToken(payload));
+
+      makeRestcall("POST", LOGIN_URI, payload).then(response => {
+        console.log(response);
+        if (response.access_token) {
+          window.localStorage.setItem(
+            "token",
+            "Bearer " + response.access_token
+          );
+          // window.localStorage.setItem("isLoggedin", true);
+          sessionStorage.setItem("token", "Bearer " + response.access_token);
+          sessionStorage.setItem("isLoggedin", true);
+          self.setState({ isLoggedin: true });
+        } else {
+          alert("Invalid user Name & password");
+        }
+      });
     }
   }
 
   render() {
-    console.log("this.props.store.---------", this.props);
-    if (this.props.store.LOGIN.isLoggedIn) {
-      return <Redirect to={"/welcome/"} />;
+    if (this.state.isLoggedin) {
+      return <Redirect to="/welcome/" />;
     } else {
       return (
         <Container>
           <Grid>
-            <GridRow >
-
-            </GridRow>
+            <GridRow />
+            <GridRow />
+            <GridRow />
+            <GridRow />
+            <Grid.Column width={2} />
             <Grid.Column width={4}>
               <Card>
-                <Image src="https://react.semantic-ui.com/images/avatar/large/matthew.png" />
+                <Image src={loginPageImage} />
               </Card>
             </Grid.Column>
 
-            <Grid.Column width={9}>
-              <Header> Login with service/service</Header>
+            <Grid.Column width={6}>
+              <Header> </Header>
               <Form>
                 <Form.Field>
                   <label>UserName :</label>
@@ -106,7 +125,12 @@ export default class LoginPage extends Component {
                     onChange={this.onChange.bind(this)}
                   />
                 </Form.Field>
-                <Button positive type="submit" onClick={this.login.bind(this)}>
+                <Button
+                  size="massive"
+                  positive
+                  type="submit"
+                  onClick={this.login.bind(this)}
+                >
                   Login
                 </Button>
               </Form>
@@ -118,11 +142,3 @@ export default class LoginPage extends Component {
     }
   }
 }
-
-const mapStateToProps = function(state) {
-  var x = { store: state };
-  console.log("----------------my store is", x);
-  return x;
-};
-
-LoginPage = connect(mapStateToProps)(LoginPage);

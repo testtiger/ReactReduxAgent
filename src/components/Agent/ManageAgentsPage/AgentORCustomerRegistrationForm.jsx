@@ -6,21 +6,32 @@ import { Redirect } from "react-router-dom";
 import { makeGetCall, makePostCall } from "../../../Rest/agent-rest-client";
 import { PROFILES_URI } from "../../../Rest/RestConstants";
 
-
-export default class Registration extends Component {
+export default class AgentORCustomerRegistrationForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       firstName: "",
       lastName: "",
       email: "",
-      receiveEmail: "",
-      profileId: ""
+      roles: [],
+      active: true
     };
   }
 
+  componentWillUnmount() {
+    this.setState({});
+  }
   isLoggedIn() {
     return sessionStorage.getItem("isLoggedin") === "true";
+  }
+  onChangeSelect(event) {
+    if (event.target.value === "") {
+      return;
+    }
+    let roles1 = [];
+
+    roles1.push(event.target.value);
+    this.setState({ roles: roles1 });
   }
   onChange(event) {
     const target = event.target;
@@ -28,52 +39,17 @@ export default class Registration extends Component {
     const name = target.name;
     this.setState({ [name]: value });
   }
-  registerCustomer(payload1) {
-    console.log("-------------------------->",payload1);
-    var self = this;
-    let payload = self.state;
-
-    payload["receiveEmail"] = payload["receiveEmail"] === true ? "yes" : "no";
-
-    var headers = { Authorization: sessionStorage.getItem("token") };
-    makePostCall(PROFILES_URI, headers, payload).then(response => {
-      console.log("proflie creation response  ============>", response);
-      if (response.id) {
-        self.setState({
-          profileId: response.id
-        });
-      }
-      if (response.errorCode) {
-        self.setState({
-          errorMessage: response.message
-        });
-      }
-    });
+  onClick() {
+    this.props.callRegistration(this.state);
   }
 
-  componentWillUnmount() {
-    console.log("In unamount------->Register");
-    this.setState({});
-  }
-
+  //this.registerCustomer.bind(this)
   render() {
-    if (!this.isLoggedIn()) {
-      return <LoginPage />;
-    }
-    if (this.state.profileId) {
-   
-      return <Redirect to={"/customers/profiles/" + this.state.profileId} />;
-    }
-    if (this.state.errorMessage) {
-      alert(this.state.errorMessage);
-      delete this.state.errorMessage;
-    }
+    //this.props=
     return (
       <div className="container">
-        <h3>Register Customer</h3>
-
+        <h3>Register Agent</h3>
         <hr />
-
         <div className="row">
           <div className="form-group col-md-3">
             <input
@@ -106,22 +82,50 @@ export default class Registration extends Component {
               value={this.state.email}
               onChange={this.onChange.bind(this)}
             />
+
+            <div className="form-group col-md-3">
+              <div className="dropdown">
+                <select name="roles" onChange={this.onChangeSelect.bind(this)}>
+                  <option value={""}>Select Role</option>
+                  <option value={"csAgentSupervisorRole"}>
+                    AgentSuperVisior
+                  </option>
+                  <option value={"csAgentRole"}>Agent</option>
+                </select>
+              </div>
+            </div>
           </div>
           <div className="form-group col-md-3">
-            <label htmlFor="receiveEmail">
+            <label htmlFor="active">
               <input
-                name="receiveEmail"
+                name="active"
                 type="checkbox"
-                id="receiveEmail"
-                value={this.state.receiveEmail}
+                id="active"
+                value={this.state.active}
                 onChange={this.onChange.bind(this)}
               />
-              Receive Email
+              Active
             </label>
           </div>
         </div>
+
         <div className="row">
-          <button onClick={this.registerCustomer.bind(this)}>Register</button>
+          <div className="form-group col-md-3" />
+          <div className="form-group col-md-3" />
+          <div className="form-group col-md-0.75">
+            <button className="btn btn-secondary" type="button">
+              Reset
+            </button>
+          </div>
+          <div className="form-group col-md-1">
+            <button
+              className="btn btn-primary"
+              type="submit"
+              onClick={this.onClick.bind(this)}
+            >
+              Register
+            </button>
+          </div>
         </div>
       </div>
     );

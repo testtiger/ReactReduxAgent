@@ -6,8 +6,7 @@ import { Redirect } from "react-router-dom";
 import { makeGetCall, makePostCall } from "../../../Rest/agent-rest-client";
 import { PROFILES_URI } from "../../../Rest/RestConstants";
 
-
-export default class Registration extends Component {
+export default class AgentORCustomerRegistartionForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,7 +14,6 @@ export default class Registration extends Component {
       lastName: "",
       email: "",
       receiveEmail: "",
-      profileId: ""
     };
   }
 
@@ -28,46 +26,14 @@ export default class Registration extends Component {
     const name = target.name;
     this.setState({ [name]: value });
   }
-  registerCustomer(payload1) {
-    console.log("-------------------------->",payload1);
-    var self = this;
-    let payload = self.state;
-
-    payload["receiveEmail"] = payload["receiveEmail"] === true ? "yes" : "no";
-
-    var headers = { Authorization: sessionStorage.getItem("token") };
-    makePostCall(PROFILES_URI, headers, payload).then(response => {
-      console.log("proflie creation response  ============>", response);
-      if (response.id) {
-        self.setState({
-          profileId: response.id
-        });
-      }
-      if (response.errorCode) {
-        self.setState({
-          errorMessage: response.message
-        });
-      }
-    });
+  onClick(){
+      this.props.callRegistration(this.state)
   }
-
-  componentWillUnmount() {
-    console.log("In unamount------->Register");
-    this.setState({});
-  }
-
+ 
+//this.registerCustomer.bind(this)
   render() {
-    if (!this.isLoggedIn()) {
-      return <LoginPage />;
-    }
-    if (this.state.profileId) {
    
-      return <Redirect to={"/customers/profiles/" + this.state.profileId} />;
-    }
-    if (this.state.errorMessage) {
-      alert(this.state.errorMessage);
-      delete this.state.errorMessage;
-    }
+    //this.props=
     return (
       <div className="container">
         <h3>Register Customer</h3>
@@ -121,7 +87,7 @@ export default class Registration extends Component {
           </div>
         </div>
         <div className="row">
-          <button onClick={this.registerCustomer.bind(this)}>Register</button>
+          <button onClick={this.onClick.bind(this)}>Register</button>
         </div>
       </div>
     );

@@ -16,9 +16,7 @@ export default class CreateOrderPage extends React.Component {
     if (!this.props.match.params.profileId) {
       throw Error("Profile id cannot be empty /undefined");
     }
-    if (this.props.match.params.profileId) {
-      alert(this.props.match.params.profileId);
-    }
+    
     this.state = {
       profileId: this.props.match.params.profileId,
       items: [],
@@ -101,7 +99,7 @@ export default class CreateOrderPage extends React.Component {
     return itemsSubTotal;
   }
   getMatchingItemIndexBySkuId(id) {
-    alert(this.getItemsSubTotal());
+    
     let matchingIndex = -1;
     if (this.state.items.length > 0) {
       this.state.items.forEach(function(ele, index) {
@@ -117,7 +115,6 @@ export default class CreateOrderPage extends React.Component {
     if (!id) {
       throw TypeError("id caanot be null");
     }
-    //alert(id);
     let matchIndex = this.getMatchingItemIndexBySkuId(id);
     console.log(this.state.items);
     if (matchIndex == -1) {
@@ -132,7 +129,7 @@ export default class CreateOrderPage extends React.Component {
     if (!skuId) {
       return;
     }
-    alert(skuId);
+    
 
     var self = this; //inside promise this will not work so store it as self
     // let localState ={...self.state.items}
@@ -338,8 +335,7 @@ export default class CreateOrderPage extends React.Component {
         endPointResponse
       ) {
         let localState = {};
-        console.log(" response  ============>", endPointResponse);
-        alert("Order created successfully is", endPointResponse.orderId);
+        
         if (endPointResponse.errorCode) {
           alert(endPointResponse.message);
         }
@@ -372,7 +368,7 @@ export default class CreateOrderPage extends React.Component {
     }
   }
   onClickPlaceOrder() {
-    alert("clicked on place order");
+    
     console.log(this.makeSubmitOrderCall(this.state.items));
   }
 

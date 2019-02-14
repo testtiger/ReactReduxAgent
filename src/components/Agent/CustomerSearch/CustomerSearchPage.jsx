@@ -3,6 +3,7 @@ import SearchCriteria from "./SearchCriteria";
 import SearchResults from "./SearchResults";
 import { makeGetCall, makePostCall } from "../../../Rest/agent-rest-client";
 import { PROFILES_URI } from "../../../Rest/RestConstants";
+import { ORDERS_URI } from "../../../Rest/RestConstants";
 import { Redirect } from "react-router-dom";
 class CustomerSearchPage extends Component {
   constructor(props) {
@@ -12,8 +13,9 @@ class CustomerSearchPage extends Component {
       isProfileInfoClicked: false,
       isOrderHistoryClicked: false,
       profileIdFromSearchResult: "",
-      isCreateOrderLinkClicked:false,
-      searchResponse: null
+      isCreateOrderLinkClicked: false,
+      searchResponse: null,
+      isAuthenticated: false
     };
   }
 
@@ -30,11 +32,10 @@ class CustomerSearchPage extends Component {
 
     var headers = { Authorization: sessionStorage.getItem("token") };
 
-
     makeGetCall(uri, headers).then(response => {
       console.log("psots are ============>", response);
       if (response.profileList) {
-        self.setState({ searchResponse: response });
+        self.setState({ searchResponse: response, isAuthenticated: false });
       }
     });
   }
@@ -49,10 +50,46 @@ class CustomerSearchPage extends Component {
     }
   }
   onClickProfileInfo(profileId) {
+    //if (this.state.isAuthenticated){
     if (profileId) {
       this.setState({ isProfileInfoClicked: true });
       this.setState({ profileIdFromSearchResult: profileId });
     }
+    //}
+  }
+
+  getOrderDetails(latestOrderID, productName) {
+    var self = this;
+    var headers = {
+      Authorization: sessionStorage.getItem("token")
+    };
+    var queryParams = { includeResult: "full" };
+    makeGetCall(ORDERS_URI + latestOrderID, headers, queryParams).then(
+      response => {
+        var x = response.shoppingCart.items;
+        x.forEach(function(item) {
+          if (item.displayName === productName) {
+            self.setState({
+              isAuthenticated: true
+            });
+          }
+        });
+
+        if (response.errorCode) {
+          alert(response.message);
+        }
+      }
+    );
+  }
+  getCallOnOrderID(latestOrderID, productName) {
+    //will make get Call to check orderID
+    if (productName.length < 5) {
+      return;
+    }
+    this.getOrderDetails(latestOrderID, productName);
+  }
+  onChangeAuthKey(latestOrderID, e) {
+    this.getCallOnOrderID(latestOrderID, e.target.value + "");
   }
   onClickCreateOrderLink(profileId) {
     if (profileId) {
@@ -68,22 +105,34 @@ class CustomerSearchPage extends Component {
       this.state.profileIdFromSearchResult
     ) {
       return (
-        <Redirect to={"/customers/profiles/" + this.state.profileIdFromSearchResult} />
-       // <CustomerProfilePage profileId={this.state.profileIdFromSearchResult} />
+        <Redirect
+          to={"/customers/profiles/" + this.state.profileIdFromSearchResult}
+        />
+        // <CustomerProfilePage profileId={this.state.profileIdFromSearchResult} />
       );
     } else if (
       this.state.isCreateOrderLinkClicked &&
       this.state.profileIdFromSearchResult
-    ){
-      return ( <Redirect to={"/createOrder/" + this.state.profileIdFromSearchResult} />);
+    ) {
+      return (
+        <Redirect to={"/createOrder/" + this.state.profileIdFromSearchResult} />
+      );
     }
     //Render Customer search page
     else {
-      let SearcResultsElement =null;
-      if(this.state.searchResponse ){
-        SearcResultsElement = <SearchResults resp={this.state.searchResponse} onClickProfileInfo={this.onClickProfileInfo.bind(this)} onClickCreateOrderLink={this.onClickCreateOrderLink.bind(this)} />;
+      let SearcResultsElement = null;
+      if (this.state.searchResponse) {
+        SearcResultsElement = (
+          <SearchResults
+            resp={this.state.searchResponse}
+            onClickProfileInfo={this.onClickProfileInfo.bind(this)}
+            onClickCreateOrderLink={this.onClickCreateOrderLink.bind(this)}
+            isAuthenticated={this.state.isAuthenticated}
+            onChangeAuthKey={this.onChangeAuthKey.bind(this)}
+          />
+        );
       }
-        
+
       return (
         <div className="container">
           <h3>Customer Search</h3>
@@ -104,8 +153,7 @@ class CustomerSearchPage extends Component {
       );
     }
   }
-  componentWillUnmount(){
-    alert("Customer search page is unmounted");
+  componentWillUnmount() {
     this.restoreOriginalState();
   }
   restoreOriginalState() {
@@ -114,7 +162,7 @@ class CustomerSearchPage extends Component {
       isProfileInfoClicked: false,
       isOrderHistoryClicked: false,
       profileIdFromSearchResult: "",
-      isCreateOrderLinkClicked:false,
+      isCreateOrderLinkClicked: false,
       searchResponse: {}
     });
   }

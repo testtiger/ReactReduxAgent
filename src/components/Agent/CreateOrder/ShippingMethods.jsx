@@ -1,19 +1,14 @@
 import React, { Component } from "react";
-
 export default class ShippingMethods extends Component {
  
-
   onChange(e) {
     this.props.selectedMethod(e.target.value);
   }
-
   onClickingShippingMethod(e) {
     this.props.selectedMethod(e);
   }
-
   render() {
     /***var self = this;
-
     let shippingOptions = null;
     if (
       this.state.availableShippingMethods.length > 0 &&
@@ -48,6 +43,7 @@ export default class ShippingMethods extends Component {
         );
       });
       shippingOptions = <select onChange={this.props.onChange.bind(this)}>
+      <option value="">Select Shipping</option>
           {sm}
         </select>;
       return shippingOptions;
@@ -58,10 +54,8 @@ export default class ShippingMethods extends Component {
           Load Shipping Methods...
         </button>;
     }
-
     //return sm;
   }
-
   /* render() {
     if (typeof this.props.shippingMethodsList === "undefined") {
       return null;
@@ -83,7 +77,6 @@ export default class ShippingMethods extends Component {
       </div>;
   } */
 }
-
 var shipipingMethodProp = {
   resp: "",
   getDisplayName: function() {
@@ -102,7 +95,6 @@ var shipipingMethodProp = {
       console.log("---------------" + low);
       console.log("---------------" + high);
       console.log("---------------" + assocaiteCost);
-
       if (high === null && subTotal >= low) {
         return assocaiteCost;
       } else if (subTotal >= low && subTotal <= high) {
